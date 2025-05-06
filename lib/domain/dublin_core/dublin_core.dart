@@ -20,6 +20,7 @@ class DublinCore {
   final String? relation;
   final String? coverage;
   final String? rights;
+  final String? dateString;
 
   DublinCore({
     this.title,
@@ -39,6 +40,7 @@ class DublinCore {
     this.relation,
     this.coverage,
     this.rights,
+    this.dateString
   });
 
   factory DublinCore.parse(XmlElement element) {
@@ -53,6 +55,8 @@ class DublinCore {
           element.findElements('dc:contributor').firstOrNull?.innerText,
       date:
           parseDateTime(element.findElements('dc:date').firstOrNull?.innerText),
+      dateString:
+          element.findElements('dc:date').firstOrNull?.innerText,
       created: parseDateTime(
           element.findElements('dc:created').firstOrNull?.innerText),
       modified: parseDateTime(

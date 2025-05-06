@@ -25,6 +25,7 @@ class RssItem {
   final RssEnclosure? enclosure;
   final DublinCore? dc;
   final Itunes? itunes;
+  final String? imageUrl;
 
   RssItem({
     this.title,
@@ -41,9 +42,18 @@ class RssItem {
     this.enclosure,
     this.dc,
     this.itunes,
+    this.imageUrl,
   });
 
   factory RssItem.parse(XmlElement element) {
+    final imageElement = element.findElements('image:image').firstOrNull?.innerText ??
+        element
+            .findElements('*')
+            .firstWhere(
+              (e) => e.name.local == 'image' && e.name.prefix == 'image',
+              orElse: () => XmlElement(XmlName('')),
+            )
+            .innerText;
     return RssItem(
       title: element.findElements('title').firstOrNull?.innerText,
       description: element.findElements('description').firstOrNull?.innerText,
@@ -72,6 +82,7 @@ class RssItem {
           .firstOrNull,
       dc: DublinCore.parse(element),
       itunes: Itunes.parse(element),
+      imageUrl: imageElement.isNotEmpty ? imageElement : null,
     );
   }
 }
